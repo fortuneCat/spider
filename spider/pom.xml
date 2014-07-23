@@ -36,6 +36,13 @@
 			<version>3.1.2.RELEASE</version>
 		</dependency>
 		<!--spring end -->
+		<!--mongodb start  -->
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>2.12.2</version>
+		</dependency>
+		<!--mongodb end  -->
 		<!--webmagic start -->
 		<dependency>
 			<groupId>us.codecraft</groupId>
