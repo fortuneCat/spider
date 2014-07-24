@@ -9,18 +9,26 @@ import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
 
 public class DBUtils {
-
-	public void connect(){
-		String myUserName = "admin";  
-		String myPassword = "admin";  
-		MongoClient mongoClient = null;
+	private MongoClient mongoClient = null;
+	
+	private DBUtils(){
 		try {
 			mongoClient = new MongoClient("localhost", 27017);
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}  
-		  
+		}
+	} 
+	
+	public DB getDB(String name){
+		DB db = mongoClient.getDB(name);
+		return db;
+	}
+	
+	public DBCollection getCollection(DB db,String collectionName){
+		DBCollection coll = db.getCollection(collectionName);
+		return coll;
+	}
+	public void connect(){
 		// 1.数据库列表  
 		for (String s : mongoClient.getDatabaseNames()) {  
 		    System.out.println("DatabaseName=" + s);  
