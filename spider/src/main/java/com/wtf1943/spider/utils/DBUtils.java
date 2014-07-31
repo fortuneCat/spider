@@ -1,52 +1,66 @@
 package com.wtf1943.spider.utils;
 
 import java.net.UnknownHostException;
-import java.util.Set;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.WriteConcern;
 
 public class DBUtils {
 	private MongoClient mongoClient = null;
-	
-	private DBUtils(){
+
+	private DBUtils() {
 		try {
 			mongoClient = new MongoClient("localhost", 27017);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-	} 
-	
-	public DB getDB(String name){
+	}
+
+	public static DBUtils getInstanse() {
+		return new DBUtils();
+	}
+
+	private DB getDB(String name) {
 		DB db = mongoClient.getDB(name);
 		return db;
 	}
-	
-	public DBCollection getCollection(DB db,String collectionName){
+
+	public void addDB(String dbname) {
+
+	}
+
+	private DBCollection getCollection(String name, String collectionName) {
+		DB db = getDB(name);
 		DBCollection coll = db.getCollection(collectionName);
 		return coll;
 	}
-	public void connect(){
-		// 1.数据库列表  
-		for (String s : mongoClient.getDatabaseNames()) {  
-		    System.out.println("DatabaseName=" + s);  
-		}  
-		// 2.链接student数据库  
-		DB db = mongoClient.getDB("student");  
-		mongoClient.setWriteConcern(WriteConcern.JOURNALED);  
-		  
-		// 4.集合列表  
-		Set<String> colls = db.getCollectionNames();  
-		for (String s : colls) {  
-		    System.out.println("CollectionName=" + s);  
-		}  
-		  
-		// 5.获取摸个集合对象  
-		DBCollection coll = db.getCollection("user");  
+
+	/**
+	 * 根据数据库名 集合名插入数据
+	 * 
+	 * @param dbname
+	 * @param collectionName
+	 * @param object
+	 */
+	public void insert(String dbname, String collectionName, DBObject object) {
+		DBCollection coll = getCollection(dbname, collectionName);
+		coll.insert(object);
 	}
+
+	public void insert(String dbname, String collectionName, String json) {
+
+	}
+
 	public static void main(String[] args) {
-		new DBUtils().connect();
+		DBCollection coll = DBUtils.getInstanse().getCollection("tao_bao",
+				"sell_counter");
+		DBCursor cursorDocJSON = coll.find();
+		while (cursorDocJSON.hasNext()) {
+			System.out.println(cursorDocJSON.next());
+		}
+
 	}
 }
