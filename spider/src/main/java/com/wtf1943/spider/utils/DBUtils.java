@@ -32,7 +32,7 @@ public class DBUtils {
 
 	}
 
-	private DBCollection getCollection(String name, String collectionName) {
+	public DBCollection getCollection(String name, String collectionName) {
 		DB db = getDB(name);
 		DBCollection coll = db.getCollection(collectionName);
 		return coll;
@@ -54,9 +54,10 @@ public class DBUtils {
 
 	}
 
+	
 	public static void main(String[] args) {
-		DBCollection coll = DBUtils.getInstanse().getCollection("tao_bao",
-				"sell_counter");
+		DBCollection coll = DBUtils.getInstanse().getCollection("proxy",
+				"proxy");
 		DBCursor cursorDocJSON = coll.find();
 		while (cursorDocJSON.hasNext()) {
 			System.out.println(cursorDocJSON.next());

@@ -14,6 +14,10 @@ import us.codecraft.webmagic.pipeline.Pipeline;
 import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.selector.Selectable;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.wtf1943.spider.utils.DBUtils;
+
 public class FechProxy implements PageProcessor{
 	// 部分一：抓取网站的相关配置，包括编码、抓取间隔、重试次数等
     private Site site = Site.me().setRetryTimes(3).setSleepTime(100);
@@ -46,6 +50,7 @@ public class FechProxy implements PageProcessor{
     }
 	
 	static class ProxyPipeline implements Pipeline{
+		DBUtils DB = DBUtils.getInstanse();
 
 		public void process(ResultItems resultItems, Task task) {
 			String context = resultItems.get("childPage");
@@ -58,7 +63,16 @@ public class FechProxy implements PageProcessor{
 			while(m.find()) {  
 			  String temp = m.group();
 			  String[] result = temp.split(":");
-			  System.out.println(result);
+			  String ip = result[0];
+			  String port = result[1];
+			  BasicDBObject obj = new BasicDBObject();
+			  obj.put("ip", ip);
+			  obj.put("port", port);
+			  DBCollection proxy = DB.getCollection("proxy", "proxy");
+			  if(proxy.find(obj).hasNext()){
+				  continue;
+			  }
+			  DB.insert("proxy", "proxy",obj);
 			} 
 			
 		}
